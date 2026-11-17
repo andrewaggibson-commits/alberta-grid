@@ -1,0 +1,93 @@
+name: Update data and deploy
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # GitHub may start scheduled runs a few minutes late
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write   # push the data branch
+  pages: write      # deploy to GitHub Pages
+  id-token: write   # required by deploy-pages
+
+# One run at a time; a queued run waits rather than cancelling a deploy.
+concurrency:
+  group: update-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        # tzdata gives zoneinfo current Alberta time-zone rules regardless of
+        # how up to date the runner image is.
+        run: pip install -r requirements.txt
+
+      - name: Check out the data branch
+        run: |
+          if git fetch --depth=1 origin data; then
+            git worktree add --detach data-branch FETCH_HEAD
+          else
+            echo "No data branch yet; starting an empty one."
+            git worktree add --detach data-branch HEAD
+            git -C data-branch rm -rq .
+          fi
+
+      - name: Scrape AESO Current Supply Demand report
+        id: scrape
+        continue-on-error: true   # still deploy site changes; the job fails at the end
+        env:
+          PYTHONTZPATH: ""   # use the pinned tzdata package, not the system copy
+        run: python scripts/scrape.py --out data-branch
+
+      - name: Commit data
+        if: steps.scrape.outcome == 'success'
+        working-directory: data-branch
+        run: |
+          # The data branch is a single commit that is replaced each run, so the
+          # repository doesn't grow by ~288 commits of JSON a day.
+          updated=$(python -c "import json; print(json.load(open('latest.json'))['updated'])")
+          git checkout -q --orphan snapshot
+          git add latest.json history.json
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -q -m "Data as of $updated"
+          git push -q --force origin snapshot:data
+
+      - name: Assemble site
+        id: assemble
+        run: |
+          if [ ! -f data-branch/latest.json ]; then
+            echo "::error::No data to deploy yet."
+            exit 1
+          fi
+          mkdir -p _site/data
+          cp -r site/. _site/
+          cp data-branch/latest.json data-branch/history.json _site/data/
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v5
+
+      - name: Report scrape failure
+        if: steps.scrape.outcome != 'success'
+        run: |
+          echo "::error::Scrape failed; the site was redeployed with the previous data. See the scrape step log."
+          exit 1

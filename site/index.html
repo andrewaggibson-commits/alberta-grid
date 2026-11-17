@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+  <head>
+    <meta charset="utf-8">
+    <title>Alberta Grid</title>
+    <meta name="description" content="Alberta's current electricity generation mix, from AESO's Current Supply Demand report">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Proza+Libre:wght@400;500&display=swap">
+    <link rel="stylesheet" href="grid.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 2 2'%3E%3Ccircle r='1' fill='%23e94'/%3E%3Cpath d='M0,-1A1,1 0 0 1 0.95,0.31L0,0z' fill='%239d5'/%3E%3C/svg%3E">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Alberta Grid</h1>
+      <p>
+        <span>Alberta’s electricity generation mix,</span> <span>from the AESO Current Supply Demand report</span>
+      </p>
+      <p>
+        <span class="asof" id="asof">Loading…</span>
+        <br><span class="stale" id="stale" hidden></span>
+      </p>
+    </header>
+    <main>
+      <div id="live">
+        <div>
+          <dl id="status">
+            <dt>Time</dt>
+            <dd id="status-time">–</dd>
+            <dt>Carbon intensity</dt>
+            <dd class="emissions" id="status-emissions">–</dd>
+            <dt>Renewables</dt>
+            <dd class="renewables" id="status-renewables">–</dd>
+          </dl>
+          <dl id="equation" data-operator="+">
+            <dt>Demand</dt>
+            <dd id="eq-demand">–</dd>
+            <dt>Generation</dt>
+            <dd id="eq-generation">–</dd>
+            <dt>Transfers</dt>
+            <dd id="eq-transfers">–</dd>
+          </dl>
+        </div>
+        <div class="sources" id="sources"></div>
+        <div class="pie-chart" id="pie">
+          <div>
+            <div id="pie-label">Generation</div>
+            <div id="pie-swatch" class="generation"></div>
+            <div><span id="pie-power">–</span> MW</div>
+            <div><span id="pie-percentage">–</span>%</div>
+          </div>
+          <svg viewBox="-1 -1 2 2" id="pie-svg" role="img" aria-label="Generation by source"></svg>
+        </div>
+      </div>
+      <section id="history">
+        <h2>Past 24 hours</h2>
+        <div id="history-graph"><p class="empty">Loading…</p></div>
+      </section>
+    </main>
+    <footer>
+      <section>
+        <h2>About</h2>
+        <p>
+          Figures come from the
+          <a href="http://ets.aeso.ca/ets_web/ip/Market/Reports/CSDReportServlet">Current Supply Demand report</a>
+          published by the Alberta Electric System Operator (AESO), which updates every few minutes.
+          A scheduled job reads it about every five minutes, so what you see is typically 5–10 minutes old.
+          This site is not affiliated with AESO.
+        </p>
+        <ul>
+          <li><strong>Generation</strong> is AESO’s total net generation (TNG) for each fuel group.</li>
+          <li><strong>Transfers</strong> are flows on the interties with British Columbia, Montana and Saskatchewan; imports into Alberta are shown as positive.</li>
+          <li><strong>Demand</strong> is the Alberta Internal Load (AIL): generation plus imports, minus exports.</li>
+          <li>Times are Alberta local time (America/Edmonton), as published by AESO.</li>
+        </ul>
+        <p>
+          The design is adapted from Kate Morley’s
+          <a href="https://github.com/KateMorley/grid">open-source grid dashboard</a> (CC0).
+        </p>
+      </section>
+      <section>
+        <h2>Carbon intensity</h2>
+        <p>
+          A rough estimate: each fuel group’s output multiplied by a typical direct
+          (smokestack) emissions factor, divided by total generation. It ignores
+          imports, construction and fuel supply chains, and real plant-by-plant
+          emissions vary.
+        </p>
+        <table class="factors" id="factors">
+          <thead><tr><th>Source</th><th>gCO₂/kWh</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </footer>
+  </body>
+</html>

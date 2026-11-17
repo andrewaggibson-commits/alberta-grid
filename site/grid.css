@@ -1,0 +1,950 @@
+/*
+ * Adapted from grid.css by Kate Morley (https://github.com/KateMorley/grid),
+ * released under CC0 1.0. Changes: Proza Libre instead of Proza, Alberta
+ * source colours, MW units, unused rules removed, additions at the end.
+ */
+
+:root {
+  --width: 36;
+  --gap: 1rem;
+  --rounding: 4px;
+  --accent: #696;
+  --background: #eee;
+  --content-background: #fff;
+  --content-text: #000;
+  --heading-background: #aaa;
+  --heading-text: #fff;
+  --selected-background: #fffc;
+  --help-background: #aaa;
+  --help-text: #fff;
+  --unit-opacity: 0.4;
+  --heading-unit-opacity: 0.6;
+  --pie-chart-radius: 145px;
+  --graph-axis: #ddd;
+  --graph-line: #f4f4f4;
+  --graph-highlight: #0001;
+  --key-line: #999;
+  --table-stripe: #f8f8f8;
+}
+
+@media screen and (min-width:840px) {
+  :root {
+    --gap: 2rem;
+  }
+}
+
+.generation      { color: #aaa; }
+.emissions       { color: #000; }
+.demand          { color: #000; }
+.fossils         { color: #c45; }
+.renewables      { color: #5b5; }
+.others          { color: #27c; }
+.transfers       { color: #aaa; }
+.cogeneration    { color: #e94; }
+.combined_cycle  { color: #a35; }
+.simple_cycle    { color: #fb8; }
+.gas_fired_steam { color: #845; }
+.dual_fuel       { color: #c66; }
+.coal            { color: #555; }
+.wind            { color: #9d5; }
+.solar           { color: #ed0; }
+.hydro           { color: #2cb; }
+.other           { color: #36b; }
+.energy_storage  { color: #639; }
+.bc              { color: #09c; }
+.montana         { color: #c66; }
+.saskatchewan    { color: #817; }
+
+@media (prefers-color-scheme:dark) {
+  :root {
+    --background: #111;
+    --content-background: #222;
+    --content-text: #eee;
+    --heading-background: #444;
+    --selected-background: #222c;
+    --help-background: #444;
+    --graph-axis: #444;
+    --graph-line: #2a2a2a;
+    --graph-highlight: #fff1;
+    --key-line: #666;
+    --unit-opacity: 0.6;
+    --table-stripe: #181818;
+  }
+
+  .generation { color: #888; }
+  .emissions  { color: #eee; }
+  .demand     { color: #eee; }
+  .transfers  { color: #888; }
+}
+
+*, ::before, ::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  font-family: "Proza Libre", sans-serif;
+  font-weight: 400;
+  font-size: clamp(18px, calc(100vw / var(--width)), 20px);
+  font-feature-settings: 'tnum';
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+body {
+  margin: 0;
+  padding: 1.5rem var(--gap) 0;
+  background: var(--background);
+  color: var(--content-text);
+}
+
+header {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  text-align: center;
+
+  h1, p {
+    margin: 0 0 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  span {
+    white-space: nowrap;
+  }
+
+  a:last-child {
+    margin-left: 0.5rem;
+    padding: 2px 0.5rem;
+    border-radius: 0.75rem;
+    background: var(--heading-background);
+    color: var(--heading-text);
+    font-weight: 500;
+    text-decoration: none;
+  }
+}
+
+main, footer {
+  display: grid;
+  gap: var(--gap);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+main {
+  padding-top: 0.5rem;
+  font-size: 18px;
+  line-height: 1.25;
+
+  @media screen and (max-width:459px) {
+    font-size: 16px;
+  }
+}
+
+footer {
+  display: grid;
+  gap: var(--gap);
+  padding-block: var(--gap);
+  font-size: 1rem;
+  line-height: 1.5;
+
+  @media screen and (min-width:960px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+section, #live dl {
+  padding: 1rem;
+  border-radius: var(--rounding);
+  background: var(--content-background);
+  color: var(--content-text);
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1;
+
+  main &, footer & {
+    margin: -1rem -1rem 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--rounding) var(--rounding) 0 0;
+    background: var(--heading-background);
+    color: var(--heading-text);
+  }
+}
+
+h3 {
+  margin: 2rem 0 1rem;
+  padding: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+p {
+  margin: 0;
+
+  + p {
+    margin-top: 1rem;
+  }
+
+  + div {
+    margin-block: 1rem;
+  }
+}
+
+table {
+  border-collapse: collapse;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.15em;
+  transition: text-decoration-color 0.2s;
+
+  &:hover {
+    text-decoration-color: var(--accent);
+  }
+}
+
+path {
+  fill: transparent;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+#live {
+  display: grid;
+  gap: var(--gap);
+  overflow: hidden;
+
+  @media screen and (min-width:1360px) {
+    --pie-chart-radius: 221px;
+  }
+
+  > div {
+    grid-column: 1 / -1;
+  }
+
+  > :first-child {
+    display: grid;
+    grid-row: 1;
+    gap: var(--gap);
+  }
+
+  @media screen and (min-width:768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media screen and (min-width:840px) {
+    grid-template-columns: 1fr calc(2 * var(--pie-chart-radius) + 4rem) 1fr;
+
+    > :first-child {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
+
+dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0;
+  text-align: center;
+
+  &::before, &::after {
+    content: ' ';
+    grid-area: 1 / 1 / 3 / 3;
+    font-size: 1.25rem;
+    line-height: 0.75rem;
+  }
+
+  &::after {
+    grid-area: 1 / 2 / 3 / 4;
+  }
+
+  &[data-operator] {
+    &::before { content: '='; }
+    &::after  { content: attr(data-operator); }
+  }
+
+  dt, dd {
+    margin: 0;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  dt {
+    grid-row: 1;
+  }
+
+  dd {
+    grid-row: 2;
+    font-size: 1.2em;
+
+    &:where(.low, .medium, .high) {
+      font-weight: 500;
+    }
+
+    abbr {
+      color: var(--content-text);
+      font-weight: 400;
+      opacity: var(--unit-opacity);
+    }
+  }
+
+  dt:nth-child(1), dd:nth-child(2) { grid-column: 1; }
+  dt:nth-child(3), dd:nth-child(4) { grid-column: 2; }
+  dt:nth-child(5), dd:nth-child(6) { grid-column: 3; }
+
+  #live & {
+    padding-inline: 0;
+
+    @media screen and (min-width:840px) and (max-width:1359px) {
+      grid-template-columns: 1fr;
+      align-content: center;
+      justify-items: start;
+
+      + dl {
+        justify-items: end;
+      }
+
+      dt, dd, &[data-operator]::before, &[data-operator]::after {
+        width: calc(50vw - var(--pie-chart-radius) - 2 * var(--gap));
+      }
+
+      dt, dd {
+        grid-column: 1;
+      }
+
+      dt:nth-child(1) { grid-row: 1; }
+      dd:nth-child(2) { grid-row: 2; }
+      dt:nth-child(3) { grid-row: 4; }
+      dd:nth-child(4) { grid-row: 5; }
+      dt:nth-child(5) { grid-row: 7; }
+      dd:nth-child(6) { grid-row: 8; }
+
+      &::before { grid-area: 3 / 1; }
+      &::after  { grid-area: 6 / 1; }
+    }
+  }
+
+  [role="tabpanel"] & {
+    dd {
+      font-size: 18px;
+    }
+  }
+}
+
+.sources {
+  display: grid;
+  grid-template-columns: max-content 1fr repeat(2, max-content);
+
+  table, thead, tbody, tr {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column-end: span 4;
+  }
+
+  tr {
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: 0.5rem;
+
+    :nth-child(3), :nth-child(4) {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    :nth-child(3)::after {
+      content: ' MW';
+      opacity: var(--unit-opacity);
+    }
+
+    :nth-child(4)::after {
+      content: '%';
+      opacity: var(--unit-opacity);
+    }
+  }
+
+  th, td {
+    padding: 0;
+  }
+
+  td + td {
+    color: var(--content-text);
+  }
+
+  #live & {
+    gap: var(--gap);
+
+    @media screen and (min-width:768px) {
+      grid-template-columns: max-content 1fr repeat(3, max-content) 1fr repeat(2, max-content);
+      grid-row: 2;
+
+      .fossils         { grid-area: 1 / 1 / 2 / 5; }
+      .renewables      { grid-area: 2 / 1 / 3 / 5; }
+      .others          { grid-area: 3 / 1 / 4 / 5; }
+      .interconnectors { grid-area: 3 / 5 / 5 / 9; }
+      .storage         { grid-area: 4 / 1 / 5 / 5; }
+    }
+
+    @media screen and (min-width:840px) {
+      .fossils         { grid-area: 1 / 1 / 2 / 5; }
+      .renewables      { grid-area: 2 / 1 / 3 / 5; }
+      .others          { grid-area: 3 / 1 / 4 / 5; }
+      .interconnectors { grid-area: 1 / 5 / 3 / 9; }
+      .storage         { grid-area: 3 / 5 / 4 / 9; }
+    }
+
+    @media screen and (min-width:1220px) and (max-width:1359px) {
+      grid-template-columns: max-content 1fr repeat(3, max-content) 1fr repeat(3, max-content) 1fr repeat(2, max-content);
+
+      .renewables      { grid-area: 2 / 1 / 4 / 5; }
+      .others          { grid-area: 1 / 5 / 3 / 9; }
+      .storage         { grid-area: 3 / 5 / 4 / 9; }
+      .interconnectors { grid-area: 1 / 9 / 4 / 13; }
+    }
+
+    @media screen and (min-width:1360px) {
+      grid-template-columns: repeat(3, max-content) 1fr 1fr repeat(3, max-content);
+      gap: 0;
+
+      .fossils, .interconnectors {
+        border-radius: var(--rounding) var(--rounding) 0 0;
+      }
+
+      .others, .storage {
+        border-radius: 0 0 var(--rounding) var(--rounding);
+      }
+    }
+
+    .transfers {
+      color: var(--heading-background);
+    }
+
+    table {
+      align-content: start;
+      overflow: hidden;
+      background: var(--content-background);
+
+      @media screen and (max-width:1359px) {
+        border-radius: var(--rounding);
+      }
+    }
+
+    thead tr {
+      --unit-opacity: var(--heading-unit-opacity);
+      background: currentColor;
+    }
+
+    tr {
+      padding: 0.5rem;
+    }
+
+    tr + tr {
+      padding-top: 0;
+    }
+
+    th, td {
+      grid-row: 1;
+      line-height: 30px;
+
+      &:nth-child(2) {
+        text-align: left;
+      }
+
+      @media screen and (min-width:1360px) {
+        &:nth-child(2) {
+          grid-column: 4;
+        }
+
+        .transfers & {
+          &:nth-child(2) { grid-column: 1; text-align: right; }
+          &:nth-child(3) { grid-column: 3; }
+          &:nth-child(4) { grid-column: 2; }
+
+          &:nth-child(2):not(:has([data-help])) {
+            padding-right: 1.2em;
+          }
+        }
+      }
+    }
+
+    th {
+      color: var(--heading-text);
+      font-weight: 500;
+    }
+
+    td:nth-child(1) {
+      background: currentColor;
+      padding-top: 2px;
+
+      svg {
+        display: block;
+        width: 30px;
+        height: 28px;
+      }
+
+      path {
+        stroke: var(--content-background);
+      }
+
+      .transfers & {
+        display: grid;
+        background: transparent;
+
+        &::before {
+          content: '';
+          grid-area: 1 / 1;
+          background: var(--graph-axis);
+          height: 2px;
+          margin-top: 13px;
+        }
+
+        svg {
+          grid-area: 1 / 1;
+          margin-block: 0;
+        }
+
+        path {
+          stroke: currentColor;
+        }
+      }
+    }
+  }
+
+  [role="tabpanel"] & {
+    > * {
+      grid-column: 1 / -1;
+    }
+
+    tr + tr {
+      padding-top: 1em;
+    }
+
+    td {
+      line-height: 1;
+
+      &:nth-child(1)::after {
+        content: '';
+        display: block;
+        width: 1em;
+        height: 1em;
+        background: currentColor;
+      }
+
+      .transfers &:nth-child(1)::after {
+        border: 2px solid;
+        background: transparent;
+      }
+    }
+  }
+}
+
+.pie-chart {
+  display: grid;
+  padding: 1px;
+  background: var(--content-background);
+  border-radius: 50%;
+  font-size: 16px;
+
+  > div, svg {
+    grid-area: 1 / 1;
+  }
+
+  > div {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    text-align: center;
+
+    div:nth-child(1) {
+      padding-top: 1.25em;
+    }
+
+    div:nth-child(2) {
+      display: block;
+      width: 35%;
+      height: 2px;
+      margin: 0.25em 0;
+      background: currentColor;
+    }
+  }
+
+  path {
+    fill: currentColor;
+    stroke: var(--content-background);
+  }
+
+  #live & {
+    grid-row: 2;
+
+    @media screen and (max-width:839px) {
+      place-self: start center;
+      width: calc(2 * var(--pie-chart-radius));
+    }
+
+    @media screen and (min-width:768px) {
+      grid-column: 2;
+    }
+
+    @media screen and (min-width:840px) {
+      grid-area: 1 / 2 / 2 / 3;
+      margin-block: -2rem;
+      border: 2rem solid var(--background);
+    }
+
+    @media screen and (min-width:1360px) {
+      grid-area: 2 / 2 / 3 / 3;
+      font-size: 1rem;
+    }
+  }
+
+  [role="tabpanel"] & {
+    width: calc(2 * var(--pie-chart-radius));
+    max-width: 100%;
+    margin: auto;
+  }
+}
+
+.graph {
+  --graph-height: 252px;
+  --axis-width: 40px;
+  --axis-height: 64px;
+  --axis-gap: 10px;
+  --key-padding: 8px;
+  display: grid;
+  grid-template: auto var(--axis-height) / var(--axis-width) 1fr;
+  gap: calc(var(--axis-gap) - 0.5em) var(--axis-gap);
+  position: relative;
+  font-size: 12px;
+  line-height: 1;
+
+  > div {
+    display: grid;
+    text-align: right;
+  }
+
+  > :nth-child(1) {
+    grid-area: 1 / 1 / 2 / 3;
+    grid-template-columns: subgrid;
+    align-content: space-between;
+
+    > :nth-child(even) {
+      margin-top: calc(0.5em - 1px);
+      border-top: 2px solid var(--graph-line);
+
+      &.axis {
+        border-color: var(--graph-axis);
+      }
+    }
+  }
+
+  > :nth-child(2) {
+    grid-area: 2 / 2 / 3 / 3;
+    grid-auto-flow: column;
+    justify-content: space-around;
+
+    div {
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+    }
+  }
+
+  svg {
+    grid-area: 1 / 2 / 2 / 3;
+    width: 100%;
+    height: var(--graph-height);
+    margin-block: calc(0.5em - 1px);
+
+    rect {
+      fill: transparent;
+
+      &:hover {
+        fill: var(--graph-highlight);
+      }
+    }
+
+    g[mask] rect {
+      fill: currentColor;
+      pointer-events: none;
+    }
+
+    path {
+      stroke: currentcolor;
+      pointer-events: none;
+    }
+
+    + div {
+      position: absolute;
+      top: calc(var(--graph-height) / 2 + 0.5em);
+      width: max-content;
+      max-width: calc(100vw / 2 - 4 * var(--key-padding));
+      padding: var(--key-padding);
+      background: var(--content-background);
+      color: var(--content-text);
+      border: 1px solid var(--key-line);
+      border-radius: var(--rounding);
+      text-align: left;
+      transform: translateY(-50%);
+      pointer-events: none;
+
+      div {
+        margin-bottom: 0.75em;
+        font-size: 16px;
+        font-weight: 500;
+        text-align: center;
+      }
+
+      table {
+        grid-template-columns: max-content 1fr max-content;
+      }
+
+      tr {
+        gap: 7px;
+
+        &:only-child {
+          grid-template-columns: 1fr max-content;
+
+          :nth-child(1) {
+            display: none;
+          }
+        }
+      }
+
+      td:nth-child(1)::after {
+        margin-top: 0;
+      }
+
+      td:nth-child(3) {
+        white-space: nowrap;
+      }
+
+      td:nth-child(3)::after {
+        content: none;
+      }
+    }
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Additions for Alberta Grid                                          */
+
+header .asof {
+  white-space: normal;
+  font-weight: 500;
+}
+
+header .stale {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 2px 0.5rem;
+  border-radius: 0.75rem;
+  background: #c45;
+  color: #fff;
+  font-weight: 500;
+}
+
+header .stale[hidden] {
+  display: none;
+}
+
+.sources .dir {
+  margin-left: 0.25em;
+  font-size: 0.8em;
+  opacity: var(--unit-opacity);
+}
+
+.pie-chart path {
+  cursor: default;
+}
+
+.pie-chart path.dim {
+  opacity: 0.35;
+}
+
+#history {
+  --graph-height: 252px;
+
+  .graph {
+    --axis-height: 1.5em;
+  }
+
+  p.empty {
+    text-align: center;
+    opacity: 0.6;
+  }
+}
+
+.graph .x-axis {
+  display: block;
+  position: relative;
+  height: var(--axis-height);
+}
+
+.graph .x-axis div {
+  position: absolute;
+  top: 0.25em;
+  writing-mode: horizontal-tb;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.graph svg path.area {
+  fill: currentColor;
+  stroke: var(--content-background);
+  stroke-width: 1;
+}
+
+.graph svg + div.tooltip {
+  font-size: 14px;
+
+  &[hidden] {
+    display: none;
+  }
+
+  table {
+    display: table;
+    border-collapse: collapse;
+  }
+
+  tr {
+    display: table-row;
+  }
+
+  td {
+    padding: 1px 4px;
+    text-align: right;
+  }
+
+  td:nth-child(1) {
+    width: 12px;
+  }
+
+  td:nth-child(1)::after {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: currentColor;
+  }
+
+  td:nth-child(2) {
+    text-align: left;
+  }
+
+  tr.total td {
+    padding-top: 4px;
+    font-weight: 500;
+  }
+}
+
+ul.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  font-size: 14px;
+  list-style: none;
+
+  li::before {
+    content: '';
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    margin-right: 0.35em;
+    background: currentColor;
+    vertical-align: -0.05em;
+  }
+
+  span {
+    color: var(--content-text);
+  }
+}
+
+footer table.factors {
+  width: 100%;
+  margin-top: 1rem;
+
+  th, td {
+    padding: 0.125rem 0.5rem;
+    text-align: left;
+  }
+
+  th {
+    font-weight: 500;
+  }
+
+  td:last-child, th:last-child {
+    text-align: right;
+  }
+
+  tr:nth-child(even) td {
+    background: var(--table-stripe);
+  }
+}
+
+footer ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+/* Let the three-up figures shrink on phones instead of overflowing. */
+dl {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media screen and (max-width:459px) {
+  dl dt {
+    white-space: normal;
+  }
+
+  dl dd {
+    font-size: 1.05em;
+  }
+}
+
+/* At the widest layout the pie overlaps the intertie names; the sign shows direction. */
+@media screen and (min-width:1360px) {
+  #live .sources .dir {
+    display: none;
+  }
+}
+
+/* Phones: let source names wrap rather than widening the page. */
+@media screen and (max-width:767px) {
+  .sources {
+    grid-template-columns: max-content minmax(0, 1fr) repeat(2, max-content);
+  }
+
+  #live .sources {
+    column-gap: 0.5rem;
+  }
+}
+
+@media screen and (max-width:459px) {
+  header span {
+    white-space: normal;
+  }
+}
