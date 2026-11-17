@@ -948,3 +948,11 @@ dl {
     white-space: normal;
   }
 }
+
+/* Keep the pie chart circular: don't let its grid row stretch it into an oval. */
+@media screen and (min-width:840px) {
+  #live .pie-chart {
+    aspect-ratio: 1;
+    align-self: center;
+  }
+}
