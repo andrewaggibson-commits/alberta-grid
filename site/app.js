@@ -112,7 +112,11 @@ function wallClock(ms, offsetMinutes) {
 // ---------------------------------------------------------------- derived values
 
 function derive(data) {
-  const fuels = [...data.generation].sort((a, b) => orderIndex(a.key) - orderIndex(b.key));
+  // Group by kind first so each pie slice sits directly outside its kind's
+  // inner-ring slice (fossils, renewables, then others and storage).
+  const kindRank = { fossils: 0, renewables: 1, others: 2, storage: 3 };
+  const fuels = [...data.generation].sort((a, b) =>
+    kindRank[kindOf(a)] - kindRank[kindOf(b)] || orderIndex(a.key) - orderIndex(b.key));
   const generation = data.summary.total_net_generation;
   const demand = data.summary.internal_load;
   const transfers = -data.summary.net_actual_interchange; // imports positive
