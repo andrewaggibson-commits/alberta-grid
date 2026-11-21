@@ -1,0 +1,101 @@
+{
+  "source": "http://ets.aeso.ca/ets_web/ip/Market/Reports/CSDReportServlet",
+  "updated": "2026-11-21T04:37:00-06:00",
+  "fetched": "2026-11-21T10:38:00+00:00",
+  "summary": {
+    "total_net_generation": 11340,
+    "net_actual_interchange": 903,
+    "internal_load": 10437,
+    "net_to_grid_generation": 8464,
+    "contingency_reserve_required": 480,
+    "dispatched_contingency_reserve": 483
+  },
+  "generation": [
+    {
+      "key": "cogeneration",
+      "label": "Cogeneration",
+      "category": "gas",
+      "mc": 6125,
+      "tng": 5026
+    },
+    {
+      "key": "wind",
+      "label": "Wind",
+      "category": "renewable",
+      "mc": 5684,
+      "tng": 3094
+    },
+    {
+      "key": "combined_cycle",
+      "label": "Combined cycle",
+      "category": "gas",
+      "mc": 3974,
+      "tng": 1945
+    },
+    {
+      "key": "gas_fired_steam",
+      "label": "Gas-fired steam",
+      "category": "gas",
+      "mc": 3078,
+      "tng": 804
+    },
+    {
+      "key": "solar",
+      "label": "Solar",
+      "category": "renewable",
+      "mc": 1892,
+      "tng": 0
+    },
+    {
+      "key": "simple_cycle",
+      "label": "Simple cycle",
+      "category": "gas",
+      "mc": 1014,
+      "tng": 72
+    },
+    {
+      "key": "hydro",
+      "label": "Hydro",
+      "category": "renewable",
+      "mc": 896,
+      "tng": 124
+    },
+    {
+      "key": "other",
+      "label": "Other",
+      "category": "other",
+      "mc": 485,
+      "tng": 275
+    },
+    {
+      "key": "energy_storage",
+      "label": "Energy storage",
+      "category": "other",
+      "mc": 270,
+      "tng": 0
+    }
+  ],
+  "generation_total": {
+    "mc": 23418,
+    "tng": 11340
+  },
+  "interchange": [
+    {
+      "key": "bc",
+      "label": "British Columbia",
+      "flow": 744
+    },
+    {
+      "key": "montana",
+      "label": "Montana",
+      "flow": 207
+    },
+    {
+      "key": "saskatchewan",
+      "label": "Saskatchewan",
+      "flow": -48
+    }
+  ],
+  "interchange_total": 903,
+  "notes": "MW. Interchange flow > 0 means export from Alberta, < 0 import."
+}
